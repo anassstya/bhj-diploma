@@ -8,8 +8,9 @@ class User {
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
+  static url = '/user'
   static setCurrent(user) {
-
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -17,7 +18,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    localStorage.removeItem('user');
   }
 
   /**
@@ -25,7 +26,12 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    const userStr = localStorage.getItem('user')
+    if(userStr){
+      return JSON.parse(userStr);
+    } else {
+      return undefined
+    }
   }
 
   /**
@@ -33,7 +39,22 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
-
+    createRequest({
+      url: `${this.url}/current`,
+      method: 'GET',
+      callback: (err, response) => {
+        let result;
+        if (err) {
+          User.unsetCurrent();
+          result = { success: false, error: 'Необходима авторизация' };
+        } else {
+          User.setCurrent(response);
+          result = { success: true, user: response };
+        }
+        callback(result);
+      }
+    });
+  
   }
 
   /**
@@ -64,7 +85,26 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
-
+    createRequest({
+      url: `${this.url}/register`,
+      method: 'POST',
+      data: data,
+      callback: (err, response) => {
+        if(err){
+          callback({"success": false,
+          "error": {
+              "email": [
+                  "Поле E-Mail адрес должно быть действительным электронным адресом."
+              ],
+              "password": [
+                  "Количество символов в поле Пароль должно быть не менее 3."
+              ]
+          }})
+        } else{
+          callback(null, { success: true, user: data });
+        }
+      }
+    })
   }
 
   /**
@@ -72,6 +112,15 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(callback) {
-
+    createRequest({
+      url: `${this.url}/logout`,
+      method: 'POST',
+      callback: () => {
+        if(User.current()){
+          User.unsetCurrent();
+          return {success: true}
+        }
+      }
+    })
   }
 }
