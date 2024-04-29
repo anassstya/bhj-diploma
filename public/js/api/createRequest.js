@@ -11,7 +11,7 @@ const createRequest = (options = {}) => {
   xhr.onload = () => {
     if(xhr.status >= 200 && xhr.status < 300){
       try{
-        callback(null, xhr.response)
+        callback(null, xhr.response);
       } catch{
         const error = new Error(`Request failed with status ${xhr.status}`);
         callback(error, null);

@@ -19,8 +19,9 @@ class Entity {
    * что наследуется от Entity)
    * */
   static create(data, callback) {
-    createRequest({url: this.url, data: data, method: 'PUT', callback})
-  }
+    createRequest({url: this.url, data: data, method: 'PUT', callback});
+    }
+    
 
   /**
    * Удаляет информацию о счёте или доходе/расходе
