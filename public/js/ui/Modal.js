@@ -15,7 +15,7 @@ class Modal {
     this.element = element;
     try{
       if(this.element){
-   //     Modal.registerEvents();
+        Modal.registerEvents();
       }
     } catch{
       throw new Error('mistake')
