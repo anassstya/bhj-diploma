@@ -15,7 +15,7 @@ class Modal {
     this.element = element;
     try{
       if(this.element){
-      //  Modal.registerEvents();
+   //     Modal.registerEvents();
       }
     } catch{
       throw new Error('mistake')
@@ -28,7 +28,20 @@ class Modal {
    * (с помощью метода Modal.onClose)
    * */
   registerEvents() {
+    const close = document.querySelectorAll('.close');
+    const closeBtns = [];
+    close.forEach(el => {
+      if(el.getAttribute('data-dismiss') === 'modal'){
+      closeBtns.push(el);
+      }
+    });
+    closeBtns.forEach(elem => {
+      elem.onclick = function(){
+        Modal.onClose();
+      }
+    })
     
+    console.log(closeBtns)
   }
 
   /**
@@ -36,9 +49,11 @@ class Modal {
    * Закрывает текущее окно (Modal.close())
    * */
   onClose(e) {
-    const closeBtn = document.getElementsByName('bobik');
-    closeBtn.addEventListener('click', ()=>{
-      Modal.close();
+    const close = document.querySelectorAll('.close');
+    close.forEach(el => {
+      el.addEventListener('click', () => {
+        Modal.close();
+      })
     })
   }
   /**
@@ -46,26 +61,15 @@ class Modal {
    * со значением «block»
    * */
   open() {
-    const modals = [...document.querySelectorAll('.modal ')];
-    modals.forEach((el) =>{
-      el.addEventListener('click', () => {
-        if(el === this.element){
-          this.element.style.display = 'block';
-        }
-      })
-    })
+    this.element.style.display = 'block';
   }
   /**
    * Закрывает окно: удаляет CSS-свойство display
    * */
   close(){
-    const modals = [...document.querySelectorAll('.modal')];
-    modals.forEach((el) =>{
-      el.addEventListener('click', () => {
-        if(el === this.element){
-          this.element.style.display = 'none';
-        }
-      })
-    })
+    this.element.style.display = 'none';
   }
 }
+
+
+
